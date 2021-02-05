@@ -28,7 +28,6 @@ while True:
     print('algorithm', algo)
     print('file names', file_names)
     conn.send(data)
-    conn.send('\n'.encode())
 
     # Loop as file content is sent in, hash, send back, and start over.
 

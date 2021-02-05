@@ -47,14 +47,19 @@ for idx, value in enumerate(args.files):
 
 # Here we write out the content sent back from the server over the socket into a file named readout.txt.
 
+
 with open('readout.txt', 'w') as f:
   while True:
     data = s.recv(1024)
     if not data:
       break
-    hexsplit = str(data.decode().split('<ENDHEX>'))
-    f.write(hexsplit)
-    print('hexsplit', hexsplit)
+    data = data.decode().split('<ENDHEX>')
+    mod_data = data
+    mod_data = mod_data[:-1]
+    print('trimming the list sent with hexes', mod_data)
+    if len(mod_data) > 0:
+      f.write(str(mod_data))
+    print('mod data', mod_data)
 f.close()
 
 with open('readout.txt', 'r') as fin:
