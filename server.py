@@ -8,10 +8,11 @@ arguments = argparse.ArgumentParser(description='A data hashing network implemen
 arguments.add_argument('-port', type=int, action='store', default='2345', help='Which port the client accesses. Default: 2345.')
 args = arguments.parse_args()
 
+# Basic configuration for the socket
 s = socket.socket()
 host = socket.gethostname()
 s.bind((host, args.port))
-s.listen(3)
+s.listen(10)
 
 print(f'Connecting to {host}:{args.port}.')
 
@@ -22,31 +23,26 @@ while True:
     # Receive meta data sent from the client.
     data = conn.recv(65536)
     working_data = data.decode()
-    print('working data', working_data)
     file_names = re.findall(r'"([^"]*)"', working_data)
     algo = file_names.pop(0)
-    print('algorithm', algo)
-    print('file names', file_names)
     conn.send(data)
 
     # Loop as file content is sent in, hash, send back, and start over.
-
     file_content = conn.recv(65536)
     file_slices = file_content.decode().split('<ENDFILE>')
-    remainder = file_slices.pop()
-    print('file content', file_content.decode())
-    print('file slices', file_slices)
+    if len(file_slices) >= len(file_names): # This removes the empty [].
+      remainder = file_slices.pop()
+
+    # This is the buffer our hexdigested hash values will go into.
     hex_buf = ''
-    
     while file_slices:
       material = file_slices.pop(0)
-      h = hashlib.new(algo)
+      h = hashlib.new(algo) # Instances on loop the client commanded hasher.
       h.update(material.encode())
       result = h.hexdigest()
       hex_buf += result
-      hex_buf += '<ENDHEX>' 
-      print('hex buf', hex_buf)
-    print('file hex', hex_buf)
+      hex_buf += '<ENDHEX>' # Protocol to allow the client to split data.
+    print('File(s) Hex: ', hex_buf)
     conn.send(hex_buf.encode())  
     conn.close()
 
