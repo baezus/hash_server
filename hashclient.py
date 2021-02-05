@@ -31,24 +31,30 @@ s.send('\n'.encode())
 print(files_packet)
 s.send(files_packet.encode())
 
-with open(args.files[0], 'r') as x:
-  while True:
-    fax = x.read()
-    if not fax:
-      break
-    print(fax)
-    s.send(fax.encode())
-x.close()
+# Loop through the files listed in the command line and read out their contents toward the server for hashing.
+
+for idx, value in enumerate(args.files):
+  with open(value, 'r') as x:
+    while True:
+      fax = x.read()
+      if not fax:
+        s.send('<ENDFILE>'.encode())
+        break
+      print(fax)
+      s.send(fax.encode())
+  x.close()
+
 
 # Here we write out the content sent back from the server over the socket into a file named readout.txt.
 
-with open('readout.txt', 'wb') as f:
+with open('readout.txt', 'w') as f:
   while True:
     data = s.recv(1024)
     if not data:
       break
-    f.write(data)
-
+    hexsplit = str(data.decode().split('<ENDHEX>'))
+    f.write(hexsplit)
+    print('hexsplit', hexsplit)
 f.close()
 
 with open('readout.txt', 'r') as fin:

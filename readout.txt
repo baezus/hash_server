@@ -1,3 +1,1 @@
-"sha1"
-["sample.txt", "sample2.txt"]
-7f6c77d87b67a28bfb5dba8eeedd2b4a1dd5e8a2
+['"sha1"\n["sample.txt", "sample2.txt"]\n']['302940176213954f686aafff183a652c5e71897f', '5362f322fddcc75e4dfe0e3547ab0506596e7e25', '']

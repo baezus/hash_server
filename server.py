@@ -19,7 +19,7 @@ while True:
     conn, addr = s.accept() # Accept waiting clients.
     print(f'Got connection from {addr}.')
 
-    #Receive the data sent from the client.
+    # Receive meta data sent from the client.
     data = conn.recv(1024)
     working_data = data.decode()
     print('working data', working_data)
@@ -30,13 +30,25 @@ while True:
     conn.send(data)
     conn.send('\n'.encode())
 
+    # Loop as file content is sent in, hash, send back, and start over.
+
     file_content = conn.recv(1024)
+    file_slices = file_content.decode().split('<ENDFILE>')
+    remainder = file_slices.pop()
     print('file content', file_content.decode())
-    h = hashlib.new(algo)
-    h.update(file_content)
-    result = h.hexdigest()
-    print('file hex', result)
-    conn.send(result.encode())
+    print('file slices', file_slices)
+    hex_buf = ''
+    
+    while file_slices:
+      material = file_slices.pop(0)
+      h = hashlib.new(algo)
+      h.update(material.encode())
+      result = h.hexdigest()
+      hex_buf += result
+      hex_buf += '<ENDHEX>' 
+      print('hex buf', hex_buf)
+    print('file hex', hex_buf)
+    conn.send(hex_buf.encode())  
     conn.close()
 
 s.close()
