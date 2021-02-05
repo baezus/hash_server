@@ -27,5 +27,12 @@ arg_packet = (args.algo).encode()
 print(arg_packet)
 s.send(arg_packet)
 
+with open('readout.txt', 'wb') as f:
+  while True:
+    data = s.recv(1024)
+    if not data:
+      break
+    f.write(data)
+  f.close()
 
 s.close()

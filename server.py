@@ -15,10 +15,9 @@ while True:
     print(f'Got connection from {addr}.')
 
     #Receive the name of the hash algorithm to use.
-    data = s.makefile()
-    for a in data.readline():
-      print(a)
-      algo = a
-    data.close()
-    conn.close()
+    data = conn.recv(1024)
+    print(data.decode())
+    conn.send(data)
+
+conn.close()
 s.close()
