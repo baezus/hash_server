@@ -28,9 +28,15 @@ while True:
     print('algorithm', algo)
     print('file names', file_names)
     conn.send(data)
+    conn.send('\n'.encode())
 
     file_content = conn.recv(1024)
     print('file content', file_content.decode())
+    h = hashlib.new(algo)
+    h.update(file_content)
+    result = h.hexdigest()
+    print('file hex', result)
+    conn.send(result.encode())
     conn.close()
 
 s.close()
