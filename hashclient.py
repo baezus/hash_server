@@ -24,11 +24,11 @@ s.connect((host, port))
 # All information sent over the socket will be encoded in binary for type variability. This is the hash algorithm the server will use.
 
 arg_packet = json.dumps(args.algo)
-print(arg_packet)
+# print(arg_packet)
 s.send(arg_packet.encode())
 files_packet = json.dumps(args.files)
 s.send('\n'.encode())
-print(files_packet)
+# print(files_packet)
 s.send(files_packet.encode())
 
 # Loop through the files listed in the command line and read out their contents toward the server for hashing.
@@ -40,7 +40,7 @@ for idx, value in enumerate(args.files):
       if not fax:
         s.send('<ENDFILE>'.encode())
         break
-      print(fax)
+      # print(fax)
       s.send(fax.encode())
   x.close()
 
@@ -56,7 +56,7 @@ with open('readout.txt', 'w') as f:
     data = data.decode().split('<ENDHEX>')
     mod_data = data
     mod_data = mod_data[:-1]
-    print('trimming the list sent with hexes', mod_data)
+    # print('trimming the list sent with hexes', mod_data)
     if len(mod_data) > 0:
       out = ''
       for idx, hex in enumerate(mod_data):
@@ -65,7 +65,7 @@ with open('readout.txt', 'w') as f:
         c = args.files[idx]
         out += str(a + b + c + '\n')
       f.write(out)
-    print('mod data', mod_data)
+    # print('mod data', mod_data)
 f.close()
 
 with open('readout.txt', 'r') as fin:
