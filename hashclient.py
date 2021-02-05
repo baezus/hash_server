@@ -58,7 +58,13 @@ with open('readout.txt', 'w') as f:
     mod_data = mod_data[:-1]
     print('trimming the list sent with hexes', mod_data)
     if len(mod_data) > 0:
-      f.write(str(mod_data))
+      out = ''
+      for idx, hex in enumerate(mod_data):
+        a = hex
+        b = '     '
+        c = args.files[idx]
+        out += str(a + b + c + '\n')
+      f.write(out)
     print('mod data', mod_data)
 f.close()
 
