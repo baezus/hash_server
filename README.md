@@ -12,7 +12,6 @@ To run the hash client, the port is optional, but the arguments that follow are 
 
 In the client terminal, the response should be a hash hexcode followed by the name of the file that hex code corresponds to.
 
-![Image of Client Output]
-(./screenshot_of_data.png)
+![Image of Client Output](./screenshot_of_data.png)
 
 
