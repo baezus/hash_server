@@ -31,6 +31,15 @@ s.send('\n'.encode())
 print(files_packet)
 s.send(files_packet.encode())
 
+with open(args.files[0], 'r') as x:
+  while True:
+    fax = x.read()
+    if not fax:
+      break
+    print(fax)
+    s.send(fax.encode())
+x.close()
+
 # Here we write out the content sent back from the server over the socket into a file named readout.txt.
 
 with open('readout.txt', 'wb') as f:

@@ -19,10 +19,18 @@ while True:
     conn, addr = s.accept() # Accept waiting clients.
     print(f'Got connection from {addr}.')
 
-    #Receive the name of the hash algorithm to use.
+    #Receive the data sent from the client.
     data = conn.recv(1024)
-    print(data.decode())
+    working_data = data.decode()
+    print('working data', working_data)
+    file_names = re.findall(r'"([^"]*)"', working_data)
+    algo = file_names.pop(0)
+    print('algorithm', algo)
+    print('file names', file_names)
     conn.send(data)
+
+    file_content = conn.recv(1024)
+    print('file content', file_content.decode())
     conn.close()
 
 s.close()
