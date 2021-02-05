@@ -21,11 +21,17 @@ port = args.port
 print(f'Connecting to {args.ip}:{port}...')
 s.connect((host, port))
 
-# All information sent over the socket will be encoded in binary for type variability.
+# All information sent over the socket will be encoded in binary for type variability. This is the hash algorithm the server will use.
 
-arg_packet = (args.algo).encode()
+arg_packet = json.dumps(args.algo)
 print(arg_packet)
-s.send(arg_packet)
+s.send(arg_packet.encode())
+files_packet = json.dumps(args.files)
+s.send('\n'.encode())
+print(files_packet)
+s.send(files_packet.encode())
+
+# Here we write out the content sent back from the server over the socket into a file named readout.txt.
 
 with open('readout.txt', 'wb') as f:
   while True:
@@ -33,6 +39,10 @@ with open('readout.txt', 'wb') as f:
     if not data:
       break
     f.write(data)
-  f.close()
+
+f.close()
+
+with open('readout.txt', 'r') as fin:
+  print(fin.read())
 
 s.close()
