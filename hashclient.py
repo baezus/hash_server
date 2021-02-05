@@ -50,7 +50,7 @@ for idx, value in enumerate(args.files):
 
 with open('readout.txt', 'w') as f:
   while True:
-    data = s.recv(1024)
+    data = s.recv(65536)
     if not data:
       break
     data = data.decode().split('<ENDHEX>')

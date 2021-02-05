@@ -20,7 +20,7 @@ while True:
     print(f'Got connection from {addr}.')
 
     # Receive meta data sent from the client.
-    data = conn.recv(1024)
+    data = conn.recv(65536)
     working_data = data.decode()
     print('working data', working_data)
     file_names = re.findall(r'"([^"]*)"', working_data)
@@ -31,7 +31,7 @@ while True:
 
     # Loop as file content is sent in, hash, send back, and start over.
 
-    file_content = conn.recv(1024)
+    file_content = conn.recv(65536)
     file_slices = file_content.decode().split('<ENDFILE>')
     remainder = file_slices.pop()
     print('file content', file_content.decode())
